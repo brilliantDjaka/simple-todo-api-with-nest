@@ -28,4 +28,7 @@ export class TodosService {
   remove(id: string) {
     return this.todoModel.findByIdAndDelete(id);
   }
+  removeCompleted() {
+    return this.todoModel.deleteMany({ isDone: true });
+  }
 }
