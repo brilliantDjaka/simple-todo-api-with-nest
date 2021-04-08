@@ -6,24 +6,28 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { IdOnlyTodoDto } from './dto/id-only-todo.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('todos')
+@UseGuards(JwtAuthGuard)
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
   @Post()
-  create(@Body() createTodoDto: CreateTodoDto) {
-    return this.todosService.create(createTodoDto);
+  create(@Body() createTodoDto: CreateTodoDto, @Request() req) {
+    return this.todosService.create(createTodoDto, req.user);
   }
 
   @Get()
-  findAll() {
-    return this.todosService.findAll();
+  findAll(@Request() req) {
+    return this.todosService.findAll(req.user);
   }
 
   @Get(':id')
@@ -44,7 +48,7 @@ export class TodosController {
     return this.todosService.remove(idOnlyTodoDto);
   }
   @Delete()
-  removeCompleted() {
-    return this.todosService.removeCompleted();
+  removeCompleted(@Request() req) {
+    return this.todosService.removeCompleted(req.user);
   }
 }
