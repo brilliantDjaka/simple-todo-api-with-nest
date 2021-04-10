@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserDocument } from 'src/schemas/user.schema';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
 @Injectable()
@@ -26,6 +25,11 @@ export class AuthService {
   }
   async loginWithGoogle(email: string) {
     const result = await this.usersService.createOrFindGoogleUser(email);
-    return this.login(result);
+    const tokenLogin = await this.login(result);
+    return {
+      url: `${process.env.REDIRECT_GOOGLE_LOGIN_URL}?t=${Buffer.from(
+        tokenLogin.access_token,
+      ).toString('base64')}`,
+    };
   }
 }

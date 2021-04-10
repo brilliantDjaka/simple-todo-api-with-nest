@@ -1,4 +1,11 @@
-import { Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Get,
+  Redirect,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -20,6 +27,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('google'))
   @Get('login/google/redirect')
+  @Redirect()
   googleAuthRedirect(@Request() req) {
     return this.authService.loginWithGoogle(req.user.email);
   }
