@@ -8,8 +8,11 @@ export class User {
   @Prop({ required: true, trim: true })
   username: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   password: string;
+
+  @Prop({ type: Boolean, default: false })
+  googleAccount: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

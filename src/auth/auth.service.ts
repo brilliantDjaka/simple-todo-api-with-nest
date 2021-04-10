@@ -24,4 +24,8 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+  async loginWithGoogle(email: string) {
+    const result = await this.usersService.createOrFindGoogleUser(email);
+    return this.login(result);
+  }
 }

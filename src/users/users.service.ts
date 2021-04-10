@@ -17,4 +17,14 @@ export class UsersService {
     const user = new this.userModel(createUserDto);
     return await user.save();
   }
+  async createOrFindGoogleUser(email: string) {
+    const payload = {
+      username: email,
+      googleAccount: true,
+    };
+    const user = await this.userModel.findOne(payload);
+    if (!user) return new this.userModel(payload).save();
+
+    return user;
+  }
 }
