@@ -5,17 +5,21 @@ import { TodoDocument, Todo } from '../schemas/todo.shema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IdOnlyTodoDto } from './dto/id-only-todo.dto';
+import { JwtDto } from '../auth/dto/jwt-dto';
 
 @Injectable()
 export class TodosService {
   constructor(@InjectModel(Todo.name) private todoModel: Model<TodoDocument>) {}
-  create(createTodoDto: CreateTodoDto) {
-    const createTodo = new this.todoModel(createTodoDto);
+  create(createTodoDto: CreateTodoDto, user: JwtDto) {
+    const createTodo = new this.todoModel({
+      ...createTodoDto,
+      owner: user.userId,
+    });
     return createTodo.save();
   }
 
-  async findAll() {
-    return (await this.todoModel.find().exec()) || [];
+  async findAll(user: JwtDto) {
+    return (await this.todoModel.find({ owner: user.userId }).exec()) || [];
   }
 
   async findOne(findByIdTodoDto: IdOnlyTodoDto): Promise<Todo> {
@@ -43,7 +47,7 @@ export class TodosService {
   remove(idOnlyTodoDto: IdOnlyTodoDto) {
     return this.todoModel.findByIdAndDelete(idOnlyTodoDto.id);
   }
-  removeCompleted() {
-    return this.todoModel.deleteMany({ isDone: true });
+  removeCompleted(user: JwtDto) {
+    return this.todoModel.deleteMany({ isDone: true, owner: user.userId });
   }
 }
