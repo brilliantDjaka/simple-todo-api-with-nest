@@ -1,4 +1,4 @@
-name: CI
+name: build&test
 on: push
 jobs:
   build:
@@ -9,3 +9,7 @@ jobs:
       run: yarn
     - name: Run tests
       run: yarn test
+    - name: Run prebuild
+      run: yarn prebuild
+    - name: Run build
+      run: yarn build
