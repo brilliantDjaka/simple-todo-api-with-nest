@@ -1,3 +1,5 @@
+![CI workflow](https://github.com/brilliantDjaka/simple-todo-api-with-nest/actions/workflows/main.yml/badge.svg)
+
 # Simple Todo API with nest.js
 Just simple todo api created with nest.js framework
 
